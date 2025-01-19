@@ -1,0 +1,39 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    container_name: innovation_db
+    environment:
+      POSTGRES_DB: innovation_db
+      POSTGRES_USER: innovation_user
+      POSTGRES_PASSWORD: innovation_pw
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: innovation_app
+    depends_on:
+      - db
+
+    env_file:
+      - .env
+
+    # ホスト上のソースをコンテナの /app にマウント
+    volumes:
+      - ./:/app
+
+    environment:
+      - PYTHONPATH=/app
+      - DATABASE_URL=postgresql://innovation_user:innovation_pw@db:5432/innovation_db
+
+    ports:
+      - "8501:8501"
+
+volumes:
+  db_data:
