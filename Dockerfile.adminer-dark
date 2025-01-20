@@ -1,0 +1,14 @@
+FROM adminer:latest
+
+# root 権限に切り替え
+USER root
+
+# curl をインストール
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Hydra Dark Theme をダウンロードして adminer.css を上書き
+RUN curl -fL https://raw.githubusercontent.com/Niyko/Hydra-Dark-Theme-for-Adminer/master/adminer.css \
+    -o /var/www/html/adminer.css
+
+# 非 root ユーザーに戻す
+USER adminer

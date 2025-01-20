@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sqlalchemy.orm import Session
 from innovation_design_map.database import Word, Relation
 
+
 def render_graph(session: Session):
     words = session.query(Word).all()
     relations = session.query(Relation).all()

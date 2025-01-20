@@ -20,20 +20,29 @@ services:
     container_name: innovation_app
     depends_on:
       - db
-
     env_file:
       - .env
-
-    # ホスト上のソースをコンテナの /app にマウント
     volumes:
       - ./:/app
-
+      - ./fonts:/app/fonts
     environment:
-      - PYTHONPATH=/app
-      - DATABASE_URL=postgresql://innovation_user:innovation_pw@db:5432/innovation_db
-
+      PYTHONPATH: /app
+      DATABASE_URL: postgresql://innovation_user:innovation_pw@db:5432/innovation_db
     ports:
       - "8501:8501"
+
+  adminer:
+    build:
+      context: .
+      dockerfile: Dockerfile.adminer-dark
+    container_name: innovation_adminer
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DEFAULT_DB: innovation_db
+    ports:
+      - "8080:8080"
 
 volumes:
   db_data:
